@@ -12,18 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome6 } from '@expo/vector-icons';
-
-// // Material Icons
-// import { MaterialIcons } from '@expo/vector-icons';
-// <MaterialIcons name="home" size={size} color={color} />
-
-// // FontAwesome
-// import { FontAwesome } from '@expo/vector-icons';
-// <FontAwesome name="home" size={size} color={color} />
-
-// // MaterialCommunityIcons
-// import { MaterialCommunityIcons } from '@expo/vector-icons';
-// <MaterialCommunityIcons name="home" size={size} color={color} />
+import { FontAwesome5 } from '@expo/vector-icons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -56,20 +45,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="community"
+        name="remedio"
         options={{
-          title: 'Comunidade',
+          title: 'Remédio',
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome6 name="user-group" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="service"
-        options={{
-          title: 'Serviços',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome6 name="hand-holding-heart" size={size} color={color} />
+            <FontAwesome5 name="hand-holding-medical" size={size} color={color} />
           ),
         }}
       />

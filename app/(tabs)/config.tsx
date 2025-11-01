@@ -261,21 +261,6 @@ export default function ConfigScreen() {
                 </Button>
               </Box>
             </VStack>
-
-            {/* 关于应用 */}
-            <VStack space="lg">
-              <Text size="xl" fontWeight="bold" color="$blue800">Sobre o App</Text>
-              <Box
-                bg="$white"
-                padding="$6"
-                borderRadius="$xl"
-                borderWidth="$1"
-                borderColor="$blue200"
-              >
-                <Text size="md" color="$blue800">Versão 1.0.0</Text>
-                <Text size="sm" color="$blue600">Desenvolvido para idosos com acessibilidade</Text>
-              </Box>
-            </VStack>
           </Box>
         </ScrollView>
       </SafeAreaView>
