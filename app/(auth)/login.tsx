@@ -1,14 +1,14 @@
 // app/(auth)/login.tsx - 添加忘记密码功能
-import React, { useState, useEffect } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { GluestackUIProvider, Box, Text, VStack } from '@gluestack-ui/themed';
-import { config } from '@gluestack-ui/config';
-import { Input, InputField } from '@/components/ui/input';
 import { Button, ButtonText } from '@/components/ui/button';
-import { supabase } from '../../lib/supabase';
+import { Input, InputField } from '@/components/ui/input';
 import { useAuth } from '@/contexts/authcontexts';
+import { config } from '@gluestack-ui/config';
+import { Box, GluestackUIProvider, Text, VStack } from '@gluestack-ui/themed';
 import { router } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, TouchableWithoutFeedback } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { supabase } from '../../lib/supabase';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -20,6 +20,8 @@ export default function LoginScreen() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { session } = useAuth();
+  const [isLogin, setIsLogin] = useState(false);
+
 
   useEffect(() => {
     if (session) {
@@ -128,7 +130,12 @@ export default function LoginScreen() {
     }
     setLoading(false);
   }
-
+  const renderNewLogin = () => (
+    <>
+    {isForgotPassword ? renderForgotPassword() : 
+               isSignUp ? renderSignUp() : renderLogin() }
+    </>  
+  );
   // Função para resetar formulário
   const resetForm = () => {
     setName('');
@@ -183,7 +190,61 @@ export default function LoginScreen() {
       </Text>
     </VStack>
   );
+  // Renderizar formulário de login
+  const renderLogin = () => (
+    <VStack space="md">
+      <Text size="2xl" fontWeight="bold" textAlign="center" mb="$6">
+        Bem-vindo de Volta
+      </Text>
 
+      <Box>
+        <Text mb="$2" size="sm" fontWeight="medium">Email</Text>
+        <Input variant="outline" size="md">
+          <InputField
+            placeholder="seu@email.com"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            returnKeyType="next"
+          />
+        </Input>
+      </Box>
+
+      <Box mb="$2">
+        <Text mb="$2" size="sm" fontWeight="medium">Senha</Text>
+        <Input variant="outline" size="md">
+          <InputField
+            placeholder="Sua senha"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            returnKeyType="done"
+          />
+        </Input>
+      </Box>
+
+      {/* Link para esqueci a senha */}
+      <Text 
+        textAlign="right" 
+        size="sm" 
+        color="$primary500" 
+        onPress={() => setIsForgotPassword(true)}
+        style={{ textDecorationLine: 'underline' }}
+        mb="$4"
+      >
+        Esqueci minha senha
+      </Text>
+
+      <Button onPress={signInWithEmail} disabled={loading}>
+        <ButtonText>{loading ? 'Entrando...' : 'Entrar'}</ButtonText>
+      </Button>
+
+      <Button variant="outline" onPress={() => setIsSignUp(true)}>
+        <ButtonText>Criar Nova Conta</ButtonText>
+      </Button>
+    </VStack>
+  );
   // Renderizar formulário de registro
   const renderSignUp = () => (
     <VStack space="md">
@@ -268,70 +329,59 @@ export default function LoginScreen() {
         textAlign="center" 
         size="sm" 
         color="$primary500" 
-        onPress={resetForm}
+        onPress={()=>{setIsLogin(false)}/*resetForm*/}
         style={{ textDecorationLine: 'underline' }}
       >
         ← Voltar para Login
       </Text>
     </VStack>
   );
-
-  // Renderizar formulário de login
-  const renderLogin = () => (
-    <VStack space="md">
+  const splashScreen = () => (
+    <>
+    <Box
+      flex={1}
+      alignItems="flex-end"
+      justifyContent="flex-start">
+      <Button
+        onPress={()=> setIsLogin(true)}
+        >
+          <ButtonText>{'Login'}</ButtonText>
+      </Button>
+    </Box>
       <Text size="2xl" fontWeight="bold" textAlign="center" mb="$6">
-        Bem-vindo de Volta
+        Qual o seu nome ?
       </Text>
-
-      <Box>
-        <Text mb="$2" size="sm" fontWeight="medium">Email</Text>
+      <Box 
+        flex={1}
+      >
         <Input variant="outline" size="md">
           <InputField
-            placeholder="seu@email.com"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
+            placeholder='Nome'
+            value={name}
+            onChangeText={setName}
             autoCapitalize="none"
             returnKeyType="next"
           />
         </Input>
+  
       </Box>
 
-      <Box mb="$2">
-        <Text mb="$2" size="sm" fontWeight="medium">Senha</Text>
-        <Input variant="outline" size="md">
-          <InputField
-            placeholder="Sua senha"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            returnKeyType="done"
-          />
-        </Input>
-      </Box>
-
-      {/* Link para esqueci a senha */}
-      <Text 
-        textAlign="right" 
-        size="sm" 
-        color="$primary500" 
-        onPress={() => setIsForgotPassword(true)}
-        style={{ textDecorationLine: 'underline' }}
-        mb="$4"
-      >
-        Esqueci minha senha
-      </Text>
-
-      <Button onPress={signInWithEmail} disabled={loading}>
+      {/* <Button onPress={} disabled={loading}>
         <ButtonText>{loading ? 'Entrando...' : 'Entrar'}</ButtonText>
-      </Button>
-
-      <Button variant="outline" onPress={() => setIsSignUp(true)}>
-        <ButtonText>Criar Nova Conta</ButtonText>
-      </Button>
-    </VStack>
+      </Button> */}
+      <Box 
+        marginBottom="$0"
+        m="$0"
+        p="$0"
+        w="$full">
+        <Button 
+          onPress={()=> {}}
+        >
+          <ButtonText>{'Continuar'}</ButtonText>
+        </Button>
+      </Box>
+    </>
   );
-
   return (
     <GluestackUIProvider config={config}>
       <SafeAreaView style={{ flex: 1 }}>
@@ -341,8 +391,9 @@ export default function LoginScreen() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
             <Box flex={1} padding="$4" justifyContent="center" bg="$backgroundLight50">
-              {isForgotPassword ? renderForgotPassword() : 
-               isSignUp ? renderSignUp() : renderLogin()}
+            
+              {!isLogin ? splashScreen() : renderNewLogin()}
+    
             </Box>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>

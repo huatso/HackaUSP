@@ -3,7 +3,7 @@ import { Input, InputField } from '@/components/ui/input';
 import { useAuth } from '@/contexts/authcontexts';
 import { supabase } from '@/lib/supabase';
 import { config } from '@gluestack-ui/config';
-import { Box, GluestackUIProvider, HStack, Text, VStack, Button } from '@gluestack-ui/themed';
+import { Box, Button, GluestackUIProvider, HStack, Text, VStack } from '@gluestack-ui/themed';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView } from 'react-native';
@@ -64,10 +64,8 @@ export default function ConfigScreen() {
       const { error } = await supabase
         .from('profiles')
         .update({
-          name: name.trim(),
-          last_name: lastName.trim(),
-          phone_number: phone.trim() || null,
-          updated_at: new Date().toISOString(),
+          full_name: name.trim() + lastName.trim(),
+          phone_number: phone.trim() || null
         })
         .eq('id', session?.user?.id);
       if (error) throw new Error(error.message);
